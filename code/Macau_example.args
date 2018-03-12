@@ -1,0 +1,12 @@
+{
+  "training_file": "../data/PKIS.csv.gz",
+  "testing_file": 1234,
+  "output_file": "../Macau_output.dat",
+  "remove_labels": true,
+  "read_parameters": true,
+  "arg_file": "../results/PKIS/Macau/PKIS_Macau_7_labelremovalmodel.dat",
+  "prediction_mode": "regression",
+  "num_iterations": 2,
+  "seed": 123456,
+  "allow_restart": true
+}

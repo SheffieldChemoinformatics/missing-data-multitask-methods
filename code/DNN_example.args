@@ -1,0 +1,31 @@
+{
+  "training_file": "../data/PKIS.csv.gz",
+  "testing_file": 1234,
+  "output_file": "../DNN_output.dat",
+  
+  "num_neurons": [
+    5000,
+    10000
+  ],
+  "num_layers": [
+    3,
+    6
+  ],
+  "dropout": [
+    0.1,
+    0.3
+  ],
+  "batch_size": [
+    10,
+    50
+  ],
+  "num_steps": [
+    20000,
+    30000
+  ],
+  "data_transform": "none",
+  "prediction_mode": "regression",
+  "num_iterations": 3,
+  "seed": 123456,
+  "multitask_strategy": "all"
+}

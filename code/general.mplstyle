@@ -1,0 +1,47 @@
+font.size:14.0
+
+lines.linewidth : 2.0
+
+patch.linewidth: 0.5
+patch.facecolor: blue
+patch.edgecolor: eeeeee
+patch.antialiased: True
+
+text.hinting_factor : 8
+
+svg.fonttype: path
+
+grid.linestyle: --
+grid.linewidth: 1.0
+grid.color: cbcbcb
+
+xtick.major.size: 0
+xtick.minor.size: 0
+ytick.major.size: 0
+ytick.minor.size: 0
+xtick.labelsize:  14
+ytick.labelsize: 14
+xtick.direction      : out
+
+
+axes.edgecolor: 888888
+axes.grid : True
+axes.linewidth : 2.0     
+axes.titlesize: 20
+axes.labelsize: 16
+axes.spines.bottom  : True
+axes.spines.left    : True
+axes.spines.right   : False
+axes.spines.top     : False
+
+legend.fancybox: True
+legend.fontsize      : 14
+
+figure.figsize   : 5, 5    # figure size in inches
+figure.dpi       : 150 
+figure.autolayout : True
+
+savefig.dpi         : 300
+savefig.transparent : True
+savefig.bbox        : standard
+
