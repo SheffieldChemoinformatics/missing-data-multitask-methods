@@ -9,17 +9,19 @@ This material is made available to aid reproduction of our work.
 
 This folder contains the three data sets used for the analysis reported: PKIS, HTSFP5, and HTSFP10.
 This data was collected from ChEMBL and PubChem.
-Files are provided as Gzipped CSV files.
+Label and descriptor data are provided as Gzipped CSV files.
 The format of the files is as follows:
 - the first column corresponds to the compound ID
 - then a set of columns describing the outputs or targets
-- finally a set of columns representing the fingerprint of the compounds, labelled D_0 to D_N, where N is the fingerprint length (1023 in our case, as we used a 1024-bit hashed Morgan fingerprint of radius 2)
+- finally a set of columns representing the fingerprint of the compounds, labelled D_0 to D_N, where N is the fingerprint length 
+Additionally, SMILES are provided in a separate file linked to the compound ID.
 
 ## Code
 
 Contains the files used to perform the DNN and the Macau computations.
 The different files are:
 - helper_functions.py: is a file with different functions used in the other files
+- RandomForest.py: generates Random Forest models both for PKIS and HTSFP sub sets
 - DNN.py: generates DNNs using Tensorflow and was used both for PKIS and HTSFP sub sets
 - MacauRegression.py: generates Macau models and provides regression results (used on PKIS data)
 - MacauClassification.py: generates Macau simulating a classification procedure (used on HTSFP subsets)
@@ -51,10 +53,12 @@ These programs require the following libraries:
 
 In this folder are the result files that were outputted by the programs and used in our analysis.
 This folder is organized first by dataset and then by technique.
-Inside each folder are 36 files:
+Inside most folder are 36 files:
 - 10 correspond to the label removal model ran on each of the sets of hyperparameters
 - 10 correspond to the compound removal model, again one per set of hyperparameters
 - 16 correspond to the seed variation test, where the first number is the seed of the train/test split and the second number is the seed of the label removal process
+Folder for Random Forest only contain 10 files, those of the compound removal model
+DNN and Macau folders for PKIS contain 10 additional files, those of the assay removal model
 
 In each output file the following structure is used.
 Each line represents a model (DNN or Macau).
