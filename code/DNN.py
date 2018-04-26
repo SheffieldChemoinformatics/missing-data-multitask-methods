@@ -45,7 +45,7 @@ DEFAULT_MAP={
 'percent_to_delete': 0,                 #percentage of data labels to delete 
 'remove_seed': 1234,                    #seed that controls which activity labels are removed 
 'remove_labels_file': None,             #if present, which compounds were removed will be saved 
-'remove_type': 'cells',                 #wether individual cells ('cells') or whole molecules ('compounds') are removed
+'remove_type': 'cells',                 #wether individual cells ('cells'), whole molecules ('compounds') or whole assays ('assays') are removed
 'impute_labels': False,                 #if true, empty values will be filled with imputed values 
 'imputation_method':'mean',             #method to use to fill empty values: 'mean', 'simmean', and 'normal'
 'impute_seed':1234,                     #seed to be used if using normal method during imputation 

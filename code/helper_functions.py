@@ -82,6 +82,23 @@ def remove_activity_labels_random_compounds(data, percent_to_delete, remove_seed
     
     return new_data, to_delete
     
+def remove_activity_labels_random_assays(data, percent_to_delete, remove_seed=1234):
+    """ Removes data by setting whole rows in the data matrix as nan
+    """
+    descriptors, labels = data
+    
+    
+    prng = np.random.RandomState(remove_seed)
+    num_assays=labels.shape[1]
+    num_to_delete=int(round(num_assays*percent_to_delete))
+    to_delete=prng.choice(num_assays, size=num_to_delete, replace=False)
+    new_labels=labels.copy()
+    new_labels[:,to_delete]=np.nan
+    new_data = (descriptors, new_labels)
+
+    
+    return new_data, to_delete
+    
     
 def remove_activity_labels(data, percent_to_delete, remove_seed=1234, remove_type='cells'):
     """ Removes a certain percentage of data based on the removal model chosen
@@ -91,8 +108,10 @@ def remove_activity_labels(data, percent_to_delete, remove_seed=1234, remove_typ
         return remove_activity_labels_random_cells(data, percent_to_delete, remove_seed)
     elif remove_type=='compounds':
         return remove_activity_labels_random_compounds(data, percent_to_delete, remove_seed)
+    elif remove_type=='assays':
+        return remove_activity_labels_random_assays(data, percent_to_delete, remove_seed)
     else:
-        print('Remove type must be one of: cells, compounds. Exiting.')
+        print('Remove type must be one of: cells, compounds, assays. Exiting.')
         sys.exit(1)
     
  

@@ -41,10 +41,11 @@ for dataset in datasets:
     plt.xlim(xlim_value)
     plt.legend(loc=locations[dataset])
     plt.savefig('{0}_absolute.png'.format(dataset))
+    plt.close()
     
     #Relative values
     plt.figure()
-    for i,technique in enumerate(['DNN', 'Macau']):
+    for technique in techniques:
         y_list=[]
         files=[os.path.join('..', 'results', dataset, technique, '{0}_{1}_{2}_labelremovalmodel.dat'.format(dataset, technique,i)) for i in range(1,11)]
         for file in files:
@@ -63,23 +64,26 @@ for dataset in datasets:
     plt.ylim(ylim_values[dataset])
     plt.legend(loc=locations[dataset])
     plt.savefig('{0}_relative.png'.format(dataset))
+    plt.close()
     
 #Comparison figure for data removal models
 
 
 datasets=['PKIS', 'HTSFP5', 'HTSFP10']
 techniques=['DNN', 'Macau']
-models=['label', 'compound']
+models=['label', 'compound', 'assay']
 
-light_colors={'label':'#9BC9E4', 'compound':'#FB849E'}
-dark_colors={'label':'#348ABD', 'compound':'#A60628'}
+light_colors={'label':'#9BC9E4', 'compound':'#FB849E', 'assay':'#bae49b'}
+dark_colors={'label':'#348ABD', 'compound':'#A60628', 'assay': '#467821'}
 measures={'PKIS': 'RMSD', 'HTSFP5': 'mcc', 'HTSFP10':'mcc'}
 locations={'PKIS': 'upper left', 'HTSFP5': 'lower left', 'HTSFP10':'lower left'}
 
-for dataset in ['PKIS', 'HTSFP5', 'HTSFP10']:
+for dataset in datasets:
     for technique in techniques:
         plt.figure()
         for model in models:
+            if model == 'assay' and 'HTSFP' in dataset:
+                continue
             y_list=[]
             files=[os.path.join('..', 'results', dataset, technique, '{0}_{1}_{2}_{3}removalmodel.dat'.format(dataset, technique,i, model)) for i in range(1,11)]
             for file in files:
@@ -98,6 +102,7 @@ for dataset in ['PKIS', 'HTSFP5', 'HTSFP10']:
         plt.ylim(ylim_values[dataset])
         plt.legend(loc=locations[dataset])
         plt.savefig('{0}_{1}_models.png'.format(dataset, technique))
+        plt.close()
         
         
 #Comparison figure for seed values
@@ -114,7 +119,7 @@ measures={'PKIS': 'RMSD', 'HTSFP5': 'mcc', 'HTSFP10':'mcc'}
 locations={'PKIS': 'upper left', 'HTSFP5': 'lower left', 'HTSFP10':'lower left'}
 bboxes={'PKIS': (0.002, 0.7), 'HTSFP5': (-0.0015, 0.64), 'HTSFP10':(-0.0015, 0.64)}
 
-for dataset in ['PKIS', 'HTSFP5', 'HTSFP10']:
+for dataset in datasets:
     for technique in techniques:
         plt.figure()
         
@@ -144,5 +149,42 @@ for dataset in ['PKIS', 'HTSFP5', 'HTSFP10']:
                      loc='upper left', bbox_to_anchor=bboxes[dataset])
         plt.gca().add_artist(legend1)
 
-        plt.legend(by_label.values(), by_label.keys(), loc=locations[dataset])
+        plt.legend(list(by_label.values()), list(by_label.keys()), loc=locations[dataset])
         plt.savefig('{0}_{1}_seeds.png'.format(dataset, technique))
+        plt.close()
+        
+#Comparison to random forest
+
+datasets=['PKIS', 'HTSFP5', 'HTSFP10']
+techniques=['DNN', 'Macau', 'RF']
+
+
+light_colors={'DNN':'#9BC9E4', 'Macau':'#FB849E', 'RF':'#bae49b'}
+dark_colors={'DNN':'#348ABD', 'Macau':'#A60628', 'RF': '#467821'}
+measures={'PKIS': 'RMSD', 'HTSFP5': 'mcc', 'HTSFP10':'mcc'}
+locations={'PKIS': 'upper left', 'HTSFP5': 'lower left', 'HTSFP10':'lower left'}
+
+for dataset in datasets:
+        
+    #Relative values
+    plt.figure()
+    for technique in techniques:
+        y_list=[]
+        files=[os.path.join('..', 'results', dataset, technique, '{0}_{1}_{2}_compoundremovalmodel.dat'.format(dataset, technique,i)) for i in range(1,11)]
+        for file in files:
+            dat = pd.read_csv(file, sep='\t')
+            dat=dat.sort_values('percent_to_delete')
+            start=dat.filter(regex='{0}_Test'.format(measures[dataset])).quantile(0.5, axis=1).values[0]
+            plt.plot(dat.percent_to_delete, 
+              100*(dat.filter(regex='{0}_Test'.format(measures[dataset])).quantile(0.5, axis=1)-start)/start, 
+              lw=1.25, c=light_colors[technique], zorder=15, label='')
+            y_list.append(100*(dat.filter(regex='{0}_Test'.format(measures[dataset])).quantile(0.5, axis=1)-start)/start)
+        y_list=np.array(y_list)
+        plt.plot(dat.percent_to_delete, y_list.mean(axis=0), c=dark_colors[technique], lw=2, label=technique, zorder=20)
+    plt.xlabel('Deleted activity labels')
+    plt.ylabel('Percent Change '+measures[dataset].upper())
+    plt.xlim(xlim_value)
+    plt.ylim(ylim_values[dataset])
+    plt.legend(loc=locations[dataset])
+    plt.savefig('{0}_RF_relative.png'.format(dataset))
+    plt.close()

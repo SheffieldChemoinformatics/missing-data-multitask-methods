@@ -30,7 +30,7 @@ DEFAULT_MAP={
 'remove_labels': False,                 #wether to remove activity labels from training data
 'percent_to_delete': 0,                 #percentage of data labels to delete 
 'remove_seed': 1234,                    #seed that controls which activity labels are removed 
-'remove_type': 'cells',                 #wether individual cells ('cells') or whole molecules ('compounds') are removed
+'remove_type': 'cells',                 #wether individual cells ('cells'), whole molecules ('compounds') or whole assays ('assays') are removed
 'remove_labels_file': None,             #if present, which compounds were removed will be saved 
 'impute_labels': False,                 #if true, empty values will be filled with imputed values 
 'imputation_method':'mean',             #method to use to fill empty values: 'mean', 'simmean', and 'normal'
@@ -177,15 +177,33 @@ def remove_activity_labels_random_compounds(labels, percent_to_delete, remove_se
     
     return new_labels, to_delete
     
+def remove_activity_labels_random_assays(labels, percent_to_delete, remove_seed=1234):
+
+    prng = np.random.RandomState(remove_seed)
+    
+    num_assays=labels.shape[1]
+    num_assays_todelete=int(percent_to_delete*num_assays)
+    
+    to_delete=prng.choice(num_assays, num_assays_todelete, replace=False)
+
+    
+    new_labels=labels.copy().values
+    new_labels[:,to_delete]=np.nan
+
+    new_labels=pd.DataFrame(new_labels)
+
+    
+    return new_labels, to_delete
+    
 def remove_labels(labels, percent_to_delete, remove_type='cells', remove_seed=1234):
-    """ Removes a certain percentage of data based on the removal model chosen
-    """
     if remove_type=='cells':
         return remove_activity_labels_random_cells(labels, percent_to_delete, remove_seed)
     elif remove_type=='compounds':
         return remove_activity_labels_random_compounds(labels, percent_to_delete, remove_seed)
+    elif remove_type=='assays':
+        return remove_activity_labels_random_assays(labels, percent_to_delete, remove_seed)
     else:
-        print('Remove type must be one of: cells, compounds. Exiting.')
+        print('Remove type must be one of: cells, compounds, assays. Exiting.')
         sys.exit(1)
     
 def run_model(train_labels, test_labels, descriptors, train_idx, test_idx, params):
