@@ -14,6 +14,7 @@ The format of the files is as follows:
 - the first column corresponds to the compound ID
 - then a set of columns describing the outputs or targets
 - finally a set of columns representing the fingerprint of the compounds, labelled D_0 to D_N, where N is the fingerprint length 
+
 Additionally, SMILES are provided in a separate file linked to the compound ID.
 
 ## Code
