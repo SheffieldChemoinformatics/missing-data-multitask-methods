@@ -8,7 +8,7 @@ import pandas as pd
 import scipy
 import macau
 
-from helper_functions import *
+from .helper_functions import *
 
 ##SET DEFAULTS
 
@@ -100,17 +100,13 @@ def set_up(arg_file, verbose=False):
         train_idx=idx[:num_train]
         test_idx=idx[num_train:]
         
-        
-        
         train_labels=pd.DataFrame(labels.copy())
-        train_labels=train_labels+1
         train_labels.iloc[test_idx,:]=np.nan
-        
+
         
         test_labels=pd.DataFrame(labels.copy())
-        test_labels=test_labels+1
         test_labels.iloc[train_idx,:]=np.nan
-        
+       
         
         datasets=read_dataset_names(training_file)
         
@@ -148,7 +144,6 @@ def transform_descriptors(descriptors, args):
 def remove_activity_labels_random_cells(labels, percent_to_delete, remove_seed=1234):    
     """ Removes data by setting individual cells in the data matrix as nan
     """
-    
     prng = np.random.RandomState(remove_seed)
     idx_x, idx_y = np.where(np.isfinite(labels))
     num_real_labels=len(idx_x)
@@ -157,8 +152,6 @@ def remove_activity_labels_random_cells(labels, percent_to_delete, remove_seed=1
     
     new_labels=labels.copy().values
     new_labels[idx_x[to_delete==0],idx_y[to_delete==0]]=np.nan
-    
-
     new_labels=pd.DataFrame(new_labels)
 
     
@@ -179,8 +172,6 @@ def remove_activity_labels_random_compounds(labels, percent_to_delete, remove_se
     
     new_labels=labels.copy().values
     new_labels[to_delete]=np.nan
-    
-
     new_labels=pd.DataFrame(new_labels)
 
     
@@ -217,25 +208,22 @@ def remove_labels(labels, percent_to_delete, remove_type='cells', remove_seed=12
     
 def run_model(train_labels, test_labels, descriptors, train_idx, test_idx, params):
     """ Runs the Macau calculation and returns the statistical results
-    """    
+    """
     macau_param_list=['lambda_beta', 'num_latent', 'precision', 'burnin','nsamples','univariate','tol','sn_max']
     kwargs={key:params[key] for key in macau_param_list}
     
-    # print(train_labels)
-    
-    descriptors=scipy.sparse.csr_matrix(descriptors)
+            
+    descriptors=scipy.sparse.csr.csr_matrix(descriptors)
     train_labels_sparse=scipy.sparse.csr_matrix(train_labels)
-
     test_labels_sparse=scipy.sparse.csr_matrix(test_labels)
+    
 
     
     result = macau.macau(Y = train_labels_sparse, Ytest = test_labels_sparse, side = [descriptors, None], verbose=False, **kwargs)
 
                      
-    y_predicted=pd.pivot_table(result.prediction, values=['y_pred'], columns=['col'], index=['row']).values-1
-    y_true=pd.pivot_table(result.prediction, values=['y'], columns=['col'], index=['row']).values-1
-    
-
+    y_predicted=pd.pivot_table(result.prediction, values=['y_pred'], columns=['col'], index=['row']).values
+    y_true=pd.pivot_table(result.prediction, values=['y'], columns=['col'], index=['row']).values
     
     # y_true_2=test_labels.copy()
     # y_true_2_idxs=y_true_2.dropna(axis=0, how='all').index.values   
@@ -245,15 +233,15 @@ def run_model(train_labels, test_labels, descriptors, train_idx, test_idx, param
     # y_predicted_2=np.zeros(test_labels.shape)
     # y_predicted_2[:,:]=np.nan
     
+
     # y_predicted_2[result.prediction['row'].values, result.prediction['col'].values]=result.prediction['y_pred'].values
     # y_predicted_2=pd.DataFrame(y_predicted_2)
     # y_predicted_2=y_predicted_2[y_predicted_2.index.isin(y_true_2_idxs)].values
-    
 
     if params['predictions_file'] is not None:
         np.savez_compressed("{0}_{1}".format(params['predictions_file'], params['model_suffix']), y_predicted)
     
-    
+   
     results=obtain_results(y_true, y_predicted, params['prediction_mode'])
     return results
     
@@ -277,12 +265,12 @@ if __name__ == "__main__":
     else:
         fout=open(output_file, 'w', 1)
         start_line=0
-        out=sorted([arg for arg in args.keys() if '_file' not in arg])
+        out=sorted([arg for arg in sorted(args.keys()) if '_file' not in arg])
         out.append('Time')
         out.extend([dataset+'_'+name+'_'+tt for dataset in datasets for name in result_names for tt in ['Train', 'Test']])
         fout.write('\t'.join(out)+'\n')
         
-    del args['allow_restart']
+    
         
     if args['remove_labels']:
         remove_labels_dict={}

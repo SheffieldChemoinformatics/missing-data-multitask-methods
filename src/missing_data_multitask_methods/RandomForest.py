@@ -16,7 +16,7 @@ from sklearn.model_selection import ParameterGrid
 from sklearn.externals import joblib
 from scipy.stats import pearsonr
 
-from helper_functions import *
+from .helper_functions import *
   
 ##SET DEFAULTS
 

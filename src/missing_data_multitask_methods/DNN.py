@@ -12,7 +12,7 @@ from tensorflow.python.ops import math_ops
 from tensorflow.python.framework import constant_op
 from tensorflow.python.framework import dtypes
 
-from helper_functions import *
+from .helper_functions import *
   
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #This should remove info and warnings
         
