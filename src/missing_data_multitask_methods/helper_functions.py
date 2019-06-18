@@ -1,12 +1,13 @@
 import gzip
-import sys
-import math
 import inspect
+import math
+import sys
 
 import numpy as np
 import pandas as pd
-from sklearn import metrics
 from scipy.stats import pearsonr
+from sklearn import metrics
+
 
 def split_data(data, seed=1234, split=0.75):
     """ Generate a training and test split

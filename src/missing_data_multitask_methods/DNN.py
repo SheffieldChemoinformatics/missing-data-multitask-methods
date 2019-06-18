@@ -1,19 +1,12 @@
-import os
-import sys
-import time
 import json
-import math
+import os
+import time
 
-import numpy as np
+import scipy.spatial.distance
 import tensorflow as tf
-from tensorflow.python.framework import ops
-from tensorflow.python.ops import random_ops
-from tensorflow.python.ops import math_ops
-from tensorflow.python.framework import constant_op
-from tensorflow.python.framework import dtypes
 
 from .helper_functions import *
-  
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #This should remove info and warnings
         
 ##SET DEFAULTS
