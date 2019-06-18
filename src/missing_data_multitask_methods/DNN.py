@@ -424,11 +424,7 @@ def set_up(arg_file, verbose=False):
         
     return (args, train_data, test_data, result_names, output_file, datasets)
 
-
-    
-
-
-if __name__ == "__main__":
+def main():
     #Parameter setting
     arg_file=sys.argv[1]
     args, original_train_data, original_test_data, result_names, output_file, datasets = set_up(arg_file)
@@ -514,7 +510,7 @@ if __name__ == "__main__":
     fout.close()
     if args['remove_labels_file'] is not None:
         np.savez_compressed(args['remove_labels_file'], **remove_labels_dict)
-            
 
 
-
+if __name__ == '__main__':
+    main()
