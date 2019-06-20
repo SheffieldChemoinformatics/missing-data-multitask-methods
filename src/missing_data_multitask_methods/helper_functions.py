@@ -1,12 +1,13 @@
 import gzip
-import sys
-import math
 import inspect
+import math
+import sys
 
 import numpy as np
 import pandas as pd
-from sklearn import metrics
 from scipy.stats import pearsonr
+from sklearn import metrics
+
 
 def split_data(data, seed=1234, split=0.75):
     """ Generate a training and test split
@@ -266,16 +267,19 @@ def transform(train_data, test_data, args):
     """
     train_descriptors, train_labels=train_data
     test_descriptors, test_labels=test_data
-    
-    if args['data_transform'] not in [None, 'log', 'binary', 'none', 'None']:
+
+    data_transform = args.get('data_transform')
+
+    if data_transform not in [None, 'log', 'binary', 'none', 'None']:
         print('Data transformation not understood: {0}. Exiting'.format(args['data_transform']))
         sys.exit(1)
-    if args['data_transform'] is None:
+
+    if data_transform is None:
         pass
-    elif args['data_transform'].lower()=='log':
+    elif data_transform.lower() == 'log':
         train_descriptors=np.log(train_descriptors+1)
         test_descriptors=np.log(test_descriptors+1)
-    elif args['data_transform'].lower()=='binary':
+    elif data_transform.lower() == 'binary':
         train_descriptors=np.where(train_descriptors>=1, 1, 0)
         test_descriptors=np.where(test_descriptors>=1, 1, 0)
     

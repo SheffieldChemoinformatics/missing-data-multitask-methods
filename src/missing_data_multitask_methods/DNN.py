@@ -1,19 +1,12 @@
-import os
-import sys
-import time
 import json
-import math
+import os
+import time
 
-import numpy as np
+import scipy.spatial.distance
 import tensorflow as tf
-from tensorflow.python.framework import ops
-from tensorflow.python.ops import random_ops
-from tensorflow.python.ops import math_ops
-from tensorflow.python.framework import constant_op
-from tensorflow.python.framework import dtypes
 
-from helper_functions import *
-  
+from .helper_functions import *
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #This should remove info and warnings
         
 ##SET DEFAULTS
@@ -424,11 +417,7 @@ def set_up(arg_file, verbose=False):
         
     return (args, train_data, test_data, result_names, output_file, datasets)
 
-
-    
-
-
-if __name__ == "__main__":
+def main():
     #Parameter setting
     arg_file=sys.argv[1]
     args, original_train_data, original_test_data, result_names, output_file, datasets = set_up(arg_file)
@@ -514,7 +503,7 @@ if __name__ == "__main__":
     fout.close()
     if args['remove_labels_file'] is not None:
         np.savez_compressed(args['remove_labels_file'], **remove_labels_dict)
-            
 
 
-
+if __name__ == '__main__':
+    main()

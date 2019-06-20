@@ -1,14 +1,11 @@
-import os
-import sys
-import time
 import json
+import os
+import time
 
-import numpy as np
-import pandas as pd
-import scipy
 import macau
+import scipy
 
-from helper_functions import *
+from .helper_functions import *
 
 ##SET DEFAULTS
 
@@ -244,8 +241,9 @@ def run_model(train_labels, test_labels, descriptors, train_idx, test_idx, param
    
     results=obtain_results(y_true, y_predicted, params['prediction_mode'])
     return results
-    
-if __name__ == "__main__":
+
+
+def main():
     #Parameter setting
     arg_file=sys.argv[1]
     args, original_train_labels, original_test_labels, original_descriptors, result_names, output_file, datasets, train_idx, test_idx = set_up(arg_file)
@@ -332,5 +330,7 @@ if __name__ == "__main__":
             
             if args['remove_labels_file'] is not None:
                 np.savez_compressed(args['remove_labels_file'], **remove_labels_dict)
-            
-            
+
+
+if __name__ == "__main__":
+    main()

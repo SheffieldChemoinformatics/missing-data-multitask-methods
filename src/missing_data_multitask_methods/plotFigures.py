@@ -1,8 +1,8 @@
 import os
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 
-import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
